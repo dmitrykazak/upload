@@ -1,0 +1,5 @@
+upload:
+    resource: "@UploadBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
