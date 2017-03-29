@@ -12,6 +12,6 @@ class UploadControllerTEst extends WebTestCase
 
         $crawler = $client->request('GET', '/');
 
-        $this->assertContains('Hello World', $client->getResponse()->getContent());
+        $this->assertContains('Upload file', $client->getResponse()->getContent());
     }
 }

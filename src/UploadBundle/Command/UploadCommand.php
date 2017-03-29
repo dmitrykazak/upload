@@ -12,6 +12,8 @@ use Ddeboer\DataImport\Reader\CsvReader;
 
 class UploadCommand extends ContainerAwareCommand
 {
+    const TEST_MODE = "test";
+
     protected function configure()
     {
         $this
@@ -54,7 +56,7 @@ class UploadCommand extends ContainerAwareCommand
             }
         }
 
-        if ('test' != $input->getArgument('test')) {
+        if (self::TEST_MODE != $input->getArgument('test')) {
             $dm->flush();
         }
 
