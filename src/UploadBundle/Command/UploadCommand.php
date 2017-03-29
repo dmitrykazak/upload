@@ -25,7 +25,8 @@ class UploadCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $file = new \SplFileObject(__DIR__.'/products.csv');
+
+        $file = new \SplFileObject(dirname(__DIR__) . '/../../web/file/products.csv');
 
         $reader = new CsvReader($file, ';');
 
