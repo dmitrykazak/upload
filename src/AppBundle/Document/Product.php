@@ -1,18 +1,14 @@
 <?php
 
-namespace UploadBundle\Document;
+namespace AppBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use Symfony\Component\Validator\Constraints as Assert;
-use UploadBundle\Validator\Constraints as UploadAssert;
 
 /**
- * @MongoDB\Document(collection="product")
- * @MongoDB\HasLifecycleCallbacks
- * @UploadAssert\ContainsCostStock
+ * @MongoDB\Document(collection="product", repositoryClass="AppBundle\Repository\ProductRepository")
  */
-class Product
-{
+class Product {
+
     /**
      * @MongoDB\Id
      */
@@ -20,13 +16,11 @@ class Product
 
     /**
      * @MongoDB\Field(type="string")
-     * @Assert\NotBlank()
      */
     protected $name;
 
     /**
      * @MongoDB\Field(type="float")
-     * @Assert\LessThan(1000)
      */
     protected $cost;
 
@@ -36,12 +30,17 @@ class Product
     protected $stock;
 
     /**
-     * @MongoDB\Field(type="boolean")
+     * @MongoDB\Field(type="string")
      */
-    protected $isDiscontinued;
+    protected $code;
 
     /**
-     * @MongoDB\Field(type="date")
+     * @MongoDB\Field(type="boolean", name="is_discount")
+     */
+    protected $isDiscount;
+
+    /**
+     * @MongoDB\Field(type="date", name="created_at")
      */
     protected $createdAt;
 
@@ -51,7 +50,7 @@ class Product
      */
     public function preUpdate()
     {
-        if (!$this->getIsDiscontinued()) {
+        if (!$this->setIsDiscount()) {
             $this->setCreatedAt(new \DateTime());
         }
     }
@@ -70,11 +69,13 @@ class Product
      * Set name
      *
      * @param string $name
+     * 
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -92,11 +93,13 @@ class Product
      * Set cost
      *
      * @param float $cost
+     *
      * @return $this
      */
     public function setCost($cost)
     {
         $this->cost = $cost;
+
         return $this;
     }
 
@@ -111,36 +114,16 @@ class Product
     }
 
     /**
-     * Set isDiscontinued
-     *
-     * @param boolean $isDiscontinued
-     * @return $this
-     */
-    public function setIsDiscontinued($isDiscontinued)
-    {
-        $this->isDiscontinued = $isDiscontinued;
-        return $this;
-    }
-
-    /**
-     * Get isDiscontinued
-     *
-     * @return boolean $isDiscontinued
-     */
-    public function getIsDiscontinued()
-    {
-        return $this->isDiscontinued;
-    }
-
-    /**
      * Set stock
      *
      * @param integer $stock
+     *
      * @return $this
      */
     public function setStock($stock)
     {
         $this->stock = $stock;
+
         return $this;
     }
 
@@ -155,14 +138,64 @@ class Product
     }
 
     /**
+     * Set code
+     *
+     * @param string $code
+     *
+     * @return $this
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string $code
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set isDiscount
+     *
+     * @param boolean $isDiscount
+     *
+     * @return $this
+     */
+    public function setIsDiscount($isDiscount)
+    {
+        $this->isDiscount = $isDiscount;
+
+        return $this;
+    }
+
+    /**
+     * Get isDiscount
+     *
+     * @return boolean $isDiscount
+     */
+    public function getIsDiscount()
+    {
+        return $this->isDiscount;
+    }
+
+    /**
      * Set createdAt
      *
      * @param date $createdAt
+     *
      * @return $this
      */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace UploadBundle;
+namespace AppBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class UploadBundle extends Bundle
+class AppBundle extends Bundle
 {
 }
