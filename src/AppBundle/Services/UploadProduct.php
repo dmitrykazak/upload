@@ -46,28 +46,43 @@ class UploadProduct
     }
 
     /**
+     * @param string $file
+     *
      * @return \Port\Result
      */
-    public function upload()
+    public function upload(string $file)
     {
-        $file = new \SplFileObject(dirname(__DIR__) . '/../../web/file/products.csv');
+        $file = new \SplFileObject($file);
 
-        $reader = new CsvReader($file, self::DELIMITER);
-
+        $reader = new CsvReader($file, static::DELIMITER);
         $reader->setHeaderRowNumber(0);
 
         $workflow = new Workflow($reader);
 
-        $writer = new DoctrineMongoDbWriter($this->manager, Product::class);
-        $writer->disableTruncate();
+        $workflow->addWriter($this->writer());
 
-        $workflow->addWriter($writer);
-
-        $mapStep = new MappingStep(self::MAPPING);
-
-        $workflow->addStep($mapStep);
+        $workflow->addStep($this->mapping());
         $workflow->addStep($this->validatorImport->stepValidate());
 
         return $workflow->process();
+    }
+
+    /**
+     * @return MappingStep
+     */
+    protected function mapping()
+    {
+        return new MappingStep(static::MAPPING);
+    }
+
+    /**
+     * @return DoctrineMongoDbWriter
+     */
+    protected function writer()
+    {
+        $writer = new DoctrineMongoDbWriter($this->manager, Product::class);
+        $writer->disableTruncate();
+
+        return $writer;
     }
 }

@@ -28,15 +28,22 @@ class UploadCommand extends ContainerAwareCommand
             ->setName('app:upload')
             ->setDescription('Upload a new file.')
             ->setHelp('This command allows you to upload a file...')
+            ->addArgument('file', InputArgument::REQUIRED, 'File for upload.')
             ->addArgument('test', InputArgument::OPTIONAL, 'Unable test mode.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $result = $this->uploadProduct->upload();
+        $file = $input->getArgument('file');
 
-        $output->writeln([
-            $result->getSuccessCount()
-        ]);
+        if (file_exists($file)) {
+            $result = $this->uploadProduct->upload($file);
+
+            $output->writeln([
+                $result->getSuccessCount()
+            ]);
+        } else {
+            $output->writeln('File not exists.');
+        }
     }
 }
