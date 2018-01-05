@@ -6,6 +6,8 @@ use Port\Doctrine\DoctrineWriter;
 
 class DoctrineMongoDbWriter extends DoctrineWriter
 {
+    private $isTest = false;
+
     /**
      * @param array $item
      */
@@ -15,6 +17,16 @@ class DoctrineMongoDbWriter extends DoctrineWriter
 
         $this->updateObject($item, $object);
 
-        $this->objectManager->persist($object);
+        if (!$this->isTest) {
+            $this->objectManager->persist($object);
+        }
+    }
+
+    /**
+     * @param bool $isTest
+     */
+    public function setIsTest(bool $isTest)
+    {
+        $this->isTest = $isTest;
     }
 }

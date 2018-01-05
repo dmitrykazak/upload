@@ -47,10 +47,11 @@ class UploadProduct
 
     /**
      * @param string $file
+     * @param bool|null $isTest
      *
      * @return \Port\Result
      */
-    public function upload(string $file)
+    public function upload(string $file, bool $isTest = null)
     {
         $file = new \SplFileObject($file);
 
@@ -59,9 +60,14 @@ class UploadProduct
 
         $workflow = new Workflow($reader);
 
-        $workflow->addWriter($this->writer());
+        $writer = $this->writer();
+        if ($isTest) {
+            $writer->setIsTest(true);
+        }
 
-        $workflow->addStep($this->mapping());
+        $workflow->addWriter($writer);
+
+        $workflow->addStep($this->mapper());
         $workflow->addStep($this->validatorImport->stepValidate());
 
         return $workflow->process();
@@ -70,7 +76,7 @@ class UploadProduct
     /**
      * @return MappingStep
      */
-    protected function mapping()
+    protected function mapper()
     {
         return new MappingStep(static::MAPPING);
     }

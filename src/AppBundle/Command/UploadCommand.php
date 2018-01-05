@@ -35,9 +35,10 @@ class UploadCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $file = $input->getArgument('file');
+        $isTest = $input->getArgument('test') ?? false;
 
         if (file_exists($file)) {
-            $result = $this->uploadProduct->upload($file);
+            $result = $this->uploadProduct->upload($file, $isTest);
 
             $output->writeln([
                 $result->getSuccessCount()
