@@ -7,21 +7,11 @@ use AppBundle\Writer\DoctrineMongoDbWriter;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Port\Csv\CsvReader;
-use Port\Steps\Step\MappingStep;
 use Port\Steps\StepAggregator as Workflow;
 
 class UploadProduct
 {
     const DELIMITER = ';';
-
-    const MAPPING = [
-        '[Product name]' => '[name]',
-        '[Cost]' => '[cost]',
-        '[Discontinued]' => '[isDiscontinued]',
-        '[Stock]' => '[stock]',
-        '[Created]' => '[createdAt]',
-        '[Product code]' => '[code]',
-    ];
 
     /**
      * @var ObjectManager $manager
@@ -34,15 +24,26 @@ class UploadProduct
     private $validatorImport;
 
     /**
+     * @var UploadMapper $mapper
+     */
+    private $mapper;
+
+    /**
      * UploadProduct constructor.
      *
      * @param DocumentManager $manager
      * @param UploadValidate $validateImport
+     * @param UploadMapper $mapper
      */
-    public function __construct(DocumentManager $manager, UploadValidate $validateImport)
+    public function __construct(
+        UploadValidate $validateImport,
+        UploadMapper $mapper,
+        DocumentManager $manager
+    )
     {
         $this->manager = $manager;
         $this->validatorImport = $validateImport;
+        $this->mapper = $mapper;
     }
 
     /**
@@ -61,24 +62,17 @@ class UploadProduct
         $workflow = new Workflow($reader);
 
         $writer = $this->writer();
+
+        $workflow->addWriter($writer);
+
+        $workflow->addStep($this->mapper->getMapper());
+        $workflow->addStep($this->validatorImport->stepValidate());
+
         if ($isTest) {
             $writer->setIsTest(true);
         }
 
-        $workflow->addWriter($writer);
-
-        $workflow->addStep($this->mapper());
-        $workflow->addStep($this->validatorImport->stepValidate());
-
         return $workflow->process();
-    }
-
-    /**
-     * @return MappingStep
-     */
-    protected function mapper()
-    {
-        return new MappingStep(static::MAPPING);
     }
 
     /**

@@ -11,10 +11,15 @@ use Symfony\Component\Console\Input\InputArgument;
 class UploadCommand extends ContainerAwareCommand
 {
     /**
-     * @var \AppBundle\Services\UploadProduct
+     * @var UploadProduct $uploadProduct
      */
     private $uploadProduct;
 
+    /**
+     * UploadCommand constructor.
+     *
+     * @param UploadProduct $uploadProduct
+     */
     public function __construct(UploadProduct $uploadProduct)
     {
         $this->uploadProduct = $uploadProduct;
