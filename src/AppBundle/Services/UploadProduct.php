@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AppBundle\Services;
 
@@ -7,7 +8,8 @@ use AppBundle\Writer\DoctrineMongoDbWriter;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Port\Csv\CsvReader;
-use Port\Steps\StepAggregator as Workflow;
+use Port\Result;
+use AppBundle\Aggregator\StepAggregatorMongo as Workflow;
 
 class UploadProduct
 {
@@ -46,13 +48,7 @@ class UploadProduct
         $this->mapper = $mapper;
     }
 
-    /**
-     * @param string $file
-     * @param bool|null $isTest
-     *
-     * @return \Port\Result
-     */
-    public function upload(string $file, bool $isTest = null)
+    public function upload(string $file, ?bool $isTest): Result
     {
         $file = new \SplFileObject($file);
 
@@ -75,10 +71,7 @@ class UploadProduct
         return $workflow->process();
     }
 
-    /**
-     * @return DoctrineMongoDbWriter
-     */
-    protected function writer()
+    protected function writer(): DoctrineMongoDbWriter
     {
         $writer = new DoctrineMongoDbWriter($this->manager, Product::class);
         $writer->disableTruncate();

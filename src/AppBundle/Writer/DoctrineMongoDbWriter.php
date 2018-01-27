@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AppBundle\Writer;
 
@@ -11,7 +12,7 @@ class DoctrineMongoDbWriter extends DoctrineWriter
     /**
      * @param array $item
      */
-    public function writeItem(array $item)
+    public function writeItem(array $item): void
     {
         $object = $this->findOrCreateItem($item);
 
@@ -25,7 +26,7 @@ class DoctrineMongoDbWriter extends DoctrineWriter
     /**
      * @param bool $isTest
      */
-    public function setIsTest(bool $isTest)
+    public function setIsTest(bool $isTest): void
     {
         $this->isTest = $isTest;
     }

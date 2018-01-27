@@ -31,6 +31,7 @@ class Product {
 
     /**
      * @MongoDB\Field(type="string")
+     * @MongoDB\Index(unique=true, order="asc")
      */
     protected $code;
 

@@ -15,10 +15,7 @@ class UploadMapper
         '[Product code]' => '[code]',
     ];
 
-    /**
-     * @return MappingStep
-     */
-    public function getMapper()
+    public function getMapper(): MappingStep
     {
         return new MappingStep(static::MAPPING);
     }

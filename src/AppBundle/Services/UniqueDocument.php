@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace AppBundle\Services;
 
-use AppBundle\Document\Product;
 use Doctrine\ODM\MongoDB\DocumentManager;
 
 class UniqueDocument
@@ -11,6 +11,11 @@ class UniqueDocument
      * @var DocumentManager $manager
      */
     private $manager;
+
+    /**
+     * @var array $productCode
+     */
+    private $productCode = [];
 
     /**
      * Unique constructor.
@@ -28,14 +33,12 @@ class UniqueDocument
      */
     public function __invoke(array $item)
     {
-        $document = $this->manager
-            ->getRepository(Product::class)
-            ->findOneBy(
-                [
-                    'code' => $item['code']
-                ]
-            );
+        if (array_key_exists($item['code'], $this->productCode)) {
+            return false;
+        }
 
-        return !($document);
+        $this->productCode[$item['code']] = true;
+
+        return true;
     }
 }

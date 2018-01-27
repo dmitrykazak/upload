@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AppBundle\Command;
 
@@ -27,7 +28,7 @@ class UploadCommand extends ContainerAwareCommand
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('app:upload')
@@ -37,10 +38,10 @@ class UploadCommand extends ContainerAwareCommand
             ->addArgument('test', InputArgument::OPTIONAL, 'Unable test mode.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output):  void
     {
         $file = $input->getArgument('file');
-        $isTest = $input->getArgument('test') ?? false;
+        $isTest = (bool) $input->getArgument('test') ?? false;
 
         if (file_exists($file)) {
             $result = $this->uploadProduct->upload($file, $isTest);

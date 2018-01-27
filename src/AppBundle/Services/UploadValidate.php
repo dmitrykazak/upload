@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AppBundle\Services;
 
@@ -61,10 +62,7 @@ class UploadValidate
         $this->filter = new ValidatorFilter($this->validator);
     }
 
-    /**
-     * @return FilterStep
-     */
-    public function stepValidate()
+    public function stepValidate(): FilterStep
     {
         $this->stepFilter->add($this->uniqueDocument);
 
